@@ -22509,7 +22509,6 @@ const getListaEstados = () => {
    })
    return jsonListaEstados
 }
-console.log(getListaEstados());
 
 const getDadosEstado = (sigla) => {
    let jsonDadosEstados = {}
@@ -22525,7 +22524,6 @@ const getDadosEstado = (sigla) => {
 
    return jsonDadosEstados
 }
-console.log(getDadosEstado('MG'));
 
 const getCapitalEstado = (sigla) => {
    let jsonCapitalEstado = {}
@@ -22541,7 +22539,6 @@ const getCapitalEstado = (sigla) => {
    return jsonCapitalEstado
 
 }
-console.log(getCapitalEstado('MG'));
 
 const getEstadosRegiao = (regiao) => {
    let arrayEstados = []
@@ -22559,7 +22556,6 @@ const getEstadosRegiao = (regiao) => {
    jsonRegiao.estados = arrayEstados
    return jsonRegiao
 }
-console.log(getEstadosRegiao('Sudeste'));
 
 const getCapitalPais = () => {
    let arrayCapitais = []
@@ -22605,10 +22601,12 @@ const getCidades = (sigla) => {
 }
  
 console.log(getCidades('AC'));
+module.exports = {
+   getListaEstados,
+   getDadosEstado,
+   getCapitalEstado,
+   getEstadosRegiao,
+   getCapitalPais,
+   getCidades
+}
  
-
-
-// jsonCapitais.uf = dados.sigla
-// jsonCapitais.descricao = dados.nome
-// jsonCapitais.capital = dados.capital
-// jsonCapitais.regiao = dados.regiao
