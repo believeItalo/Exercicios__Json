@@ -27,12 +27,13 @@ const bodyParser = require('body-parser')
 //cria um objeto com as informações da classe express
 const app = express()
 
+//define as permissões no header da api 
 app.use((request, response, next) => {
     //permite gerenciar a origem das requisições da API
     //o "*" siginifica que a API sera pública, porem podemos no lugar do "*" um ip, que sera 'vip' e só ele podera fazer uso da API
-    response.header('Access-Control-Allow-Origin','*')
+    response.header('Access-Control-Allow-Origin', '*')
     //permite gerenciar quais verbo/(metodos) poderão fazer requisicões
-    response.header('Access-Control-Allow-Methods','GET, POST, DELETE, PUT, OPTIONS')
+    response.header('Access-Control-Allow-Methods', 'GET, POST, DELETE, PUT, OPTIONS')
     //Ativa no cors das requsições as permissoes estabelecidas 
     app.use(cors())
 
@@ -40,18 +41,103 @@ app.use((request, response, next) => {
 })
 
 //endpoints
-
+const estadosCidades = require('./module/estados_cidades.js')
 //endpoint para listar os estados
-app.get('/estados', cors(), async function(request, response, next){
+app.get('/estados', cors(), async function (request, response, next) {
 
-    const estadosCidades = require('./module/estados_cidades.js')
+    //import do arquivo  de funções
+   
+
+    //chama a função que retorna os estados
     let listaDeEstados = estadosCidades.getListaEstados()
-    response.json(listaDeEstados)
-    response.status(200)
+
+    
+    if (listaDeEstados) {
+        //retorna o json e o staus code
+        response.json(listaDeEstados)
+        response.status(200)
+    }
+    else{
+        response.status(500)
+    }
+
 
 
 })
+app.get('/estado/sigla/:uf', cors(), async function(request,response,next){
+    // /:uf é uma variávek qye será utilizada para passagens de valores, na RL da requisição
+
+    let siglaEstado = request.params.uf
+    //tratamento para validar os valores encaminhados no parâmetro
+    if(siglaEstado == ' '|| siglaEstado == undefined|| siglaEstado.length != 2|| !isNaN(siglaEstado)){
+        response.status(400)
+        response.json({message: 'não é possível processar a requisição pois a sigla do estado não foi informada ou não atende a quantidade de caracteres (2 digitos)'})
+    }
+    else{
+        //função que retorna o estado pela sigla
+        let estado = estadosCidades.getDadosEstado(siglaEstado)
+
+        //valida se houve retorno válido da função
+        if (estado) {
+            response.status(200)
+            response.json(estado)
+        }     
+        else{
+            response.status(404)
+            response.json()
+        }
+    }
+
+})
+app.get('/estado/siglacap/:uf', cors(), async function(request,response,next){
+    // /:uf é uma variávek qye será utilizada para passagens de valores, na RL da requisição
+
+    let siglaEstado = request.params.uf
+    //tratamento para validar os valores encaminhados no parâmetro
+    if(siglaEstado == ' '|| siglaEstado == undefined|| siglaEstado.length != 2|| !isNaN(siglaEstado)){
+        response.status(400)
+        response.json({message: 'não é possível processar a requisição pois a sigla do estado não foi informada ou não atende a quantidade de caracteres (2 digitos)'})
+    }
+    else{
+        //função que retorna o estado pela sigla
+        let estado = estadosCidades.getCapitalEstado(siglaEstado)
+
+        //valida se houve retorno válido da função
+        if (estado) {
+            response.status(200)
+            response.json(estado)
+        }     
+        else{
+            response.status(404)
+            response.json()
+        }
+    }
+
+})
+app.get('/estado/siglareg/:regiao', cors(), async function(request,response,next){
+    // /:uf é uma variávek qye será utilizada para passagens de valores, na RL da requisição
+
+    let regiao = request.params.regiao
+    //tratamento para validar os valores encaminhados no parâmetro
+   
+   
+        //função que retorna o estado pela sigla
+        let estado = estadosCidades.getEstadosRegiao(regiao)
+
+        //valida se houve retorno válido da função
+        if (estado) {
+            response.status(200)
+            response.json(estado)
+        }     
+        else{
+            response.status(404)
+            response.json()
+        }
+    }
+
+)
+
 //Permite carregar os endpoints criados e aguardar as requisições pelo protocolo HTTP na porta 8080
-app.listen(8080, function(){
+app.listen(8080, function () {
     console.log('Servidor aguardando requisições na porta 8080');
 })

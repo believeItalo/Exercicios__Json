@@ -22578,7 +22578,8 @@ const getCapitalPais = () => {
    jsonArmazenaCapitais.capitais = arrayCapitais
    return jsonArmazenaCapitais
 }
-console.log(getCapitalPais());
+
+
 const getCidades = (sigla) => {
    let jsonCidades = {}
    let arrayCidades = []
@@ -22600,7 +22601,6 @@ const getCidades = (sigla) => {
    return jsonCidades
 }
  
-console.log(getCidades('AC'));
 module.exports = {
    getListaEstados,
    getDadosEstado,
